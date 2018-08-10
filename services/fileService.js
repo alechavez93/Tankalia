@@ -10,7 +10,7 @@ class FileService{
     /** Assigns all listeners related to file operations to every _socket on connection */
     initializeServices(){
         this.io.sockets.on("connection", socket => {
-            this.getAllImageFiles((files) => {
+            this.getAllImageFiles(files => {
                 socket.on("getImageFiles", () => {
                     socket.emit("imageFiles", files);
                 });
