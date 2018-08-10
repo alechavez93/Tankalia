@@ -7,7 +7,7 @@ class FileService{
         this.initializeServices();
     }
 
-    /** Assigns all listeners related to file operations to every socket on connection */
+    /** Assigns all listeners related to file operations to every _socket on connection */
     initializeServices(){
         this.io.sockets.on("connection", socket => {
             this.getAllImageFiles((files) => {
