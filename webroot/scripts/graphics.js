@@ -88,6 +88,15 @@ class Graphics{
         let canonAxisX = canonImage.width/20;
         let canonAxisY = canonImage.height/5;
         this._drawImage(tankImage, positionX, positionY);
-        this._rotateAndDrawImage(canonImage, (canonAngle*Math.PI/180), canonX, canonY, canonAxisX, canonAxisY);
+        this._rotateAndDrawImage(canonImage, -(canonAngle*Math.PI/180), canonX, canonY, canonAxisX, canonAxisY);
+    }
+
+    /** Draws a green tank safely assuming image has been loaded */
+    drawGreenTank(positionX, positionY, canonAngle, facingAngle){
+        let greenTank = this.imageLibrary["tankGreen"];
+        let greenCanon = this.imageLibrary["cannonGreen"];
+        if(greenTank.loaded && greenCanon.loaded){
+            this._drawTank(greenTank.image, greenCanon.image, positionX, positionY, canonAngle);
+        }
     }
 }
