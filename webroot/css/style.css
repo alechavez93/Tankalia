@@ -1,5 +1,7 @@
 #main-canvas{
-    height: 300px;
-    width: 600px;
+    height: auto;
+    width: auto;
     border: black solid thin;
+
+
 }
