@@ -1,14 +1,14 @@
 let socket = io.connect();
-let graphics = new Graphics({ socket: socket });
-let input = new Input({ socket: socket});
-let cannonAngle = 30;
-let positionX = 20;
-let positionY = 100;
 
-let mouseDown = input.isMouseDown();
-let rigthArrow = input.rightArrow();
-let leftArrow = input.leftArrow();
-cannonAngle = input.findAngle(input.mousePosition());
+let graphics = new Graphics({
+    socket: socket
+});
+
+let input = new Input({
+    socket: socket,
+    username: "TestUser",
+    secret: "TestSecret"
+});
 
 // This code is for testing purposes
 setTimeout(() => {

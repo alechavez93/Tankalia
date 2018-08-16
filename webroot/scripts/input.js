@@ -2,81 +2,85 @@ class Input {
 
     constructor(dependencies) {
         this._socket = dependencies.socket;
-        this.canvas = document.getElementById("main-canvas");
+        this._credentials = {
+            username: dependencies.username,
+            secret: dependencies.secret
+        };
+        this._canvas = document.getElementById("main-canvas");
+        this._setUpKeyListeners();
     }
 
-    /** This function will check if the right arrow is being pressed, and will return a boolean indicating the action*/
-    rightArrow(){
-       document.addEventListener('keydown', function(event){
+    _setUpKeyListeners(){
+        const RIGHT_ARROW = 39,
+              LEFT_ARROW = 37;
 
-           if(event.keyCode === 39){
-               console.log("The right arrow was pressed");
-             return true;
-           }
-       });
-        return false
-    }
-
-    /** This function will check if the left arrow is being pressed, and will return a boolean indicating the action*/
-    leftArrow(){
-        document.addEventListener('keydown', function(event){
-
-            if(event.keyCode === 37){
-                console.log("The left arrow was pressed");
-                return true;
+        /** Adding key related event listeners */
+        this._canvas.addEventListener("keydown", event => {
+            switch(event.keyCode){
+                case RIGHT_ARROW:
+                    this._sendRightArrowDownAction();
+                    break;
+                case LEFT_ARROW:
+                    this._sendLeftArrowDownAction();
+                    break;
             }
         });
-        return false
+
+        this._canvas.addEventListener("keyup", event => {
+            switch(event.keyCode){
+                case RIGHT_ARROW:
+                    this._sendRightArrowUpAction();
+                    break;
+                case LEFT_ARROW:
+                    this._sendLeftArrowUpAction();
+                    break;
+            }
+        });
+
+        /** Adding mouse related event listeners */
+        this._canvas.addEventListener("onmousedown", event => {
+           this._sendMouseDownAction({
+               x: event.clientX,
+               y: event.clientY
+           });
+        });
+
+        /** Adding mouse related event listeners */
+        this._canvas.addEventListener("onmouseup", event => {
+            this._sendMouseUpAction({
+                x: event.clientX,
+                y: event.clientY
+            });
+        });
     }
 
-    /** This function will check if the mouse is pressed, and will return a boolean indicating the action*/
-    isMouseDown(){
-        this.canvas.onmousedown = function(){
-            console.log("The mouse is pressed");
-            return true
-        };
-        return false
+    _sendRightArrowDownAction(){
+        this._socket.emit("rightArrowDown", this._credentials);
     }
 
-    /** This function will check if the mouse is clicked, and will find its x and y coordinates*/
-    mousePosition(){
-        let x = 0;
-        let y = 0;
-        this.canvas.onclick = function(event){
-            x = event.clientX;
-            y = event.clientY;
-            console.log("The mouse X position is " + x + " and its Y position is " + y);
-        };
-        return {"x": x, "y": y}
+    _sendLeftArrowDownAction(){
+        this._socket.emit("leftArrowDown", this._credentials);
     }
 
-    findAngle(posArr){
-        let xMouse = posArr.x;
-        let yMouse = posArr.y;
-
-        /** This is temporary, it must be replaced by the cannon image rotating axis */
-        let canonAxisX = 70;
-        let canonAxisY = 90;
-        //
-        // //let greenCanon = graphics.imageLibrary["cannonGreen"];
-        //
-        // let canonAxisX = greenCanon.width/20;
-        // let canonAxisY = greenCanon.height/5;
-        //
-        let angRad = Math.atan(Math.abs(canonAxisY - yMouse)/Math.abs(canonAxisX - xMouse));
-        let angDeg = angRad * (180/Math.PI);
-
-        /** This is just to check if the current mouse location is been properly received*/
-        if(xMouse !== 0) {
-            console.log("The x position is " + xMouse);
-        }
-        else{
-            console.log("The mouse has not been clicked");
-        }
-        console.log("The cannon angle is " + angDeg);
-        return angDeg;
-
-        // so far the problem is that the function mousePosition() is not returning the x and y values every time the mouse is click is released, so, information is not getting updated
+    _sendRightArrowUpAction(){
+        this._socket.emit("rightArrowUp", this._credentials);
     }
 
+    _sendLeftArrowUpAction(){
+        this._socket.emit("leftArrowUp", this._credentials);
+    }
+
+    _sendMouseDownAction(point){
+        this._socket.emit("leftMouseDown", this._credentials, point);
+    }
+
+    _sendMouseUpAction(point){
+        this._socket.emit("leftMouseUp", this._credentials, point);
+    }
+
+
+    static findAngle(pointA, pointB){
+        let angRad = Math.atan(Math.abs(pointB.y - pointA.y)/Math.abs(pointB.x - pointA.x));
+        return angRad * (180/Math.PI);
+    }
 }

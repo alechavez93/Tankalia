@@ -28,3 +28,9 @@ class FileService{
 }
 
 module.exports = FileService;
+//synchronous vs asynchronous -> check out
+//clean architecture by uncle bob
+//https://www.youtube.com/watch?v=Bv_5Zv5c-Ts
+//dynamic typed vs strongly typed languages
+//Medium Topics: Mobile Development, Android, IOS, Client-Server(The internet), Game Development
+//Advanced Topics: AI, Machine Learning, Neural Networks, Blockchain, Cryptography, IoT
