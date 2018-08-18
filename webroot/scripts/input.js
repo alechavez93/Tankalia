@@ -1,8 +1,9 @@
+let xPositionChange = 0;
+let x = 0;
+let y = 0;
 class Input {
     constructor(dependencies) {
         this._socket = dependencies.socket;
-        this.x = 0;
-        this.y = 0;
         this._credentials = {
             username: dependencies.username,
             secret: dependencies.secret
@@ -41,19 +42,24 @@ class Input {
         });
 
         /** Adding mouse related event listeners, if mouse is pressed, it will pass an object containing mouse coordinates to a function to perform an action */
-        document.addEventListener("onmousedown", event => {
-            console.log('mouse up')
+        this._canvas.addEventListener("mousedown", event => {
+            console.log('mouse down');
+            x = event.clientX;
+            y = event.clientY;
             this._sendMouseDownAction({
-                x: event.clientX,
-                y: event.clientY
+                x: x,
+                y: y
             });
         });
 
         /** Adding mouse related event listeners, if mouse is released, it will pass an object containing mouse coordinates to a function to perform an action */
-        document.addEventListener("onmouseup", event => {
+        this._canvas.addEventListener("mouseup", event => {
+            console.log('mouse up');
+            x = event.clientX;
+            y = event.clientY;
             this._sendMouseUpAction({
-                x: event.clientX,
-                y: event.clientY
+                x: x,
+                y: y
             });
         });
     }
@@ -61,13 +67,11 @@ class Input {
     // All the following functions will communicate with the server when a given event occurs
     /** This function will be called in case the right arrow key is pressed */
     _sendRightArrowDownAction() {
-        this.x += 1;
-        this.y += 1;
-        // this.findAngle(this.x++, this.y++);
         this._socket.emit("rightArrowDown", { action: 'right-arrow', ...this._credentials });
 
         this._socket.on('move right', function (msg) {
-            // console.log(msg);
+            xPositionChange = msg;
+            console.log("Moving to the right");
         });
     }
 
@@ -76,7 +80,8 @@ class Input {
         this._socket.emit("leftArrowDown", { action: 'left-arrow', ...this._credentials });
 
         this._socket.on('move left', function (msg) {
-            // console.log(msg);
+            xPositionChange = msg;
+            console.log("Moving to the left");
         });
     }
 
@@ -101,17 +106,37 @@ class Input {
     /** This function will be called in case the mouse is pressed */
     _sendMouseDownAction(point) {
         this._socket.emit("leftMouseDown", this._credentials, point);
+
+        this._socket.on('mousePressed', function (msg) {
+            console.log("The mouse was pressed");
+        });
     }
 
     /** This function will be called in case the mouse is released */
     _sendMouseUpAction(point) {
         this._socket.emit("leftMouseUp", this._credentials, point);
+
+        this._socket.on('mouseReleased', function (msg) {
+            console.log("The mouse was released");
+        });
     }
 
     /** This function will be used to find the cannon pointing angle */
     findAngle(pointA, pointB) {
-        console.log('point b', pointB)
+        console.log('point b', pointB);
         let angRad = Math.atan(Math.abs(pointB.y - pointA.y) / Math.abs(pointB.x - pointA.x));
         return angRad * (180 / Math.PI);
+    }
+
+    getXpositionChange(){
+        return xPositionChange;
+    }
+
+    getXPosition(){
+        return x;
+    }
+
+    getYPosition(){
+        return y;
     }
 }

@@ -3,9 +3,9 @@ class Graphics{
     /** Initializing object via constructor, getting canvas and 2D context, then loading images */
     constructor(dependencies){
         this._socket = dependencies.socket;
-        let canvas = document.getElementById("main-canvas");
-        this._ctx = canvas.getContext("2d");
-        this._imageShrinkRatio = 10;
+        this._canvas = document.getElementById("main-canvas");
+        this._ctx = this._canvas.getContext("2d");
+        this._imageShrinkRatio = 20;
         this._loadImages();
     }
 
@@ -51,11 +51,13 @@ class Graphics{
             width = 477 / this._imageShrinkRatio;
             height = 288 / this._imageShrinkRatio;
         }
-        else if(entityName.includes("cannon")){
+        else if(entityName.includes("cannon")) {
             width = 232 / this._imageShrinkRatio;
             height = 68 / this._imageShrinkRatio;
+        } else if(entityName.includes("background")){
+            width = this._canvas.clientWidth;
+            height = this._canvas.clientHeight;
         }
-
         return new Image(width, height);
     }
 
@@ -98,5 +100,10 @@ class Graphics{
         if(greenTank.loaded && greenCanon.loaded){
             this._drawTank(greenTank.image, greenCanon.image, positionX, positionY, canonAngle);
         }
+    }
+
+    drawBackgroundImage(){
+        let backgroundImage = this.imageLibrary["background"];
+        this._drawImage(backgroundImage,0,0);
     }
 }
