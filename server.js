@@ -1,3 +1,5 @@
+const socket = require('./socketListen');
+
 let port = process.env.PORT || 8000,
     express = require("express"),
     app = express(),
@@ -11,12 +13,13 @@ server.listen(port, () => {
     console.log(`For Debugging => Listening on: http://localhost:${port}`);
 });
 
-io.connectedSockets = [];
-io.on("connect", function (socket) {
-    io.connectedSockets.push(socket);
-    console.log("Socket connected!");
+app.get('/', function (req, res) {
+    console.log('TEST')
+    res.send('Hello moot');
 });
+
+io.connectedSockets = [];
+socket.socketListen(io);
 
 /** Initializing services */
 let fileService = new (require("./services/fileService"))({ io: io });
-
