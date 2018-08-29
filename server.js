@@ -19,4 +19,9 @@ io.on("connect", function (socket) {
 
 /** Initializing services */
 let fileService = new (require("./services/fileService"))({ io: io });
+let userInputService = new (require("./services/userInputService"))({});
+
+
+/** Initialize listener */
+let inputListener = new (require("./eventListeners/userInputEventListener"))({ io: io, userInputService: userInputService});
 

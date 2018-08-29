@@ -10,12 +10,12 @@ let input = new Input({
     secret: "TestSecret"
 });
 
-let positionX = 20;
-let positionY = 100;
-let cannonAngle = Input.findAngle({x : positionX, y: positionY}, {x: 0, y:0});
-
-// This code is for testing purposes
-setTimeout(() => {
-    graphics.drawGreenTank(positionX, positionY, cannonAngle);
-}, 500);
+// let positionX = 20;
+// let positionY = 100;
+// let cannonAngle = Input.findAngle({x : positionX, y: positionY}, {x: 0, y:0});
+//
+// // This code is for testing purposes
+// setTimeout(() => {
+//     graphics.drawGreenTank(positionX, positionY, cannonAngle);
+// }, 500);
 
